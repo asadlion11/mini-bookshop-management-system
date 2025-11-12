@@ -1,0 +1,25 @@
+{% extends "./base.html" %}
+{% block title %}Books{% endblock %}
+{% block content %}
+<h1>Books</h1>
+<a href="{% url 'new-book' %}">Add New Book</a>
+{% if books %}
+<h1>All Books</h1>
+    {% for book in books %}
+    <h2>Book Title: {{ book.title }}</h2>
+    <h3>Author Name: {{ book.author }}</h3>
+    <h3>Price: {{ book.price }}</h3>
+    <h3>Quantity: {{ book.quantity }}</h3>
+    {% endfor %}
+    <h1>You added sytem to below books</h1>
+    {% for current_user_added_book in current_user_added_books %}
+    <h2>Book Title: {{ current_user_added_book.title }}</h2>
+    <h3>Author Name: {{ current_user_added_book.author }}</h3>
+    <h3>Price: {{ current_user_added_book.price }}</h3>
+    <h3>Quantity: {{ current_user_added_book.quantity }}</h3>
+    {% endfor %}
+{% else %}
+<h3>No Books are avaialable</h3>
+<a href="{% url 'new-book' %}">Add New Book</a>
+{% endif %}
+{% endblock %}

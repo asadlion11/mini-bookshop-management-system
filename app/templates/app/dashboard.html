@@ -3,5 +3,21 @@
 
 {% block  content%}
 <h1>Dashboard</h1>
-<h2>Welcome {{ username }}</h2>
+<h2>Welcome {{ full_name }}</h2>
+<div>
+    <div>
+        <h1>All Books</h1>
+        <h1>{{ books }}</h1>
+    </div>
+    <div>
+        <h1>{{ full_name }}</h1>
+        <h3>{{ current_user_added_books }}</h3>
+        <p>books added to the system</p>
+    </div>
+    <div>
+        <h1>Other Users</h1>
+        <h3>{{ other_users_added_books }}</h3>
+        <p>books added to the system</p>
+    </div>
+</div>
 {% endblock  %}
