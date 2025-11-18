@@ -6,18 +6,15 @@
 <h2>Welcome {{ full_name }}</h2>
 <div>
     <div>
-        <h1>All Books</h1>
-        <h1>{{ books }}</h1>
+        <h1>Books Types</h1>
+        <h2>{{ books_types }}</h2>
+        <h1>Total Books</h1>
+        <h2>{{ total_books }}</h2>
     </div>
     <div>
-        <h1>{{ full_name }}</h1>
-        <h3>{{ current_user_added_books }}</h3>
-        <p>books added to the system</p>
-    </div>
-    <div>
-        <h1>Other Users</h1>
-        <h3>{{ other_users_added_books }}</h3>
-        <p>books added to the system</p>
+        <h3>Most quantity book: {{ max_quantity_book.title }} - {{ max_quantity_book.quantity }} books</p>
+        <h3>Highest price book: {{ highest_price_book.title }} - ${{ highest_price_book.price }} per book</h3>
+        <h3>Lowest price book: {{ lowest_price_book.title }} - ${{ lowest_price_book.price }} per book</h3>
     </div>
 </div>
 {% endblock  %}

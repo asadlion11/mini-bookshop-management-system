@@ -3,6 +3,7 @@ from app.forms import CustomSignupForm , LoginForm, BookForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Book
+from django.db.models import Sum
 # Create your views here.
 
 # Signup views
@@ -39,11 +40,14 @@ def logout_user(request):
 @login_required
 def dashboard(request):
     full_name = request.user.get_full_name()
-    books = Book.objects.all().count()
-    current_user_added_books = Book.objects.filter(user=request.user).count()
-    other_users_added_books = Book.objects.exclude(user=request.user).count()
+    books_types = Book.objects.all().count()
+    total_books = Book.objects.all().aggregate(total=Sum('quantity'))['total']
+    max_quantity_book = Book.objects.order_by('-quantity').first()
+    highest_price_book = Book.objects.order_by('-price').first()
+    lowest_price_book = Book.objects.order_by('price').first()
+  
     
-    return render(request, 'app/dashboard.html', {'full_name': full_name, 'books': books, 'current_user_added_books': current_user_added_books, 'other_users_added_books': other_users_added_books})
+    return render(request, 'app/dashboard.html', {'full_name': full_name, 'books_types': books_types, 'total_books': total_books, 'max_quantity_book': max_quantity_book, 'highest_price_book': highest_price_book, 'lowest_price_book': lowest_price_book})
 
 # books view
 @login_required
@@ -65,9 +69,9 @@ def new_book(request):
     form = BookForm()
     return render(request, 'app/book-form.html', {'form': form})
     
-   
+# update book
 @login_required
-def update_book(request):
+def update_book(request, id):
     pass
 
 @login_required
