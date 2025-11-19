@@ -43,11 +43,31 @@ def dashboard(request):
     books_types = Book.objects.all().count()
     total_books = Book.objects.all().aggregate(total=Sum('quantity'))['total']
     max_quantity_book = Book.objects.order_by('-quantity').first()
+    # Book.objects - Gets all Book objects from database
+    # .order_by('-quantity') - Sorts books by quantity in descending order (highest first)
+    # .first() - Takes the first book from the sorted list
+    # max_quantity_book stores the entire book object
+    # You can access all fields of that book object:
+    # max_quantity_book.quantity → gets the quantity
+    # max_quantity_book.title → gets the title
+    # max_quantity_book.created_at → gets creation date
+    # max_quantity_book.price → gets price
+    # And any other fields your Book model has
+    min_quantity_book = Book.objects.order_by('quantity').first()
     highest_price_book = Book.objects.order_by('-price').first()
     lowest_price_book = Book.objects.order_by('price').first()
-  
     
-    return render(request, 'app/dashboard.html', {'full_name': full_name, 'books_types': books_types, 'total_books': total_books, 'max_quantity_book': max_quantity_book, 'highest_price_book': highest_price_book, 'lowest_price_book': lowest_price_book})
+    context = {
+        'full_name': full_name,
+        'books_types': books_types,
+        'total_books': total_books,
+        'max_quantity_book': max_quantity_book,
+        'min_quantity_book': min_quantity_book,
+        'highest_price_book': highest_price_book,
+        'lowest_price_book': lowest_price_book,
+    }
+    
+    return render(request, 'app/dashboard.html', context)
 
 # books view
 @login_required
