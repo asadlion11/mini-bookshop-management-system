@@ -2,7 +2,9 @@
 {% block title %}Books{% endblock %}
 {% block content %}
 <h1>Books</h1>
-<a href="{% url 'new-book' %}">Add New Book</a>
+ {% if user.is_staff %}
+ <a href="{% url 'new-book' %}">Add New Book</a>
+ {% endif %}
 {% if books %}
 <h1>All Books</h1>
     {% for book in books %}
@@ -13,6 +15,9 @@
     {% endfor %}
 {% else %}
 <h3>No Books are avaialable</h3>
-<a href="{% url 'new-book' %}">Add New Book</a>
+ {% if user.is_staff %}
+ <a href="{% url 'new-book' %}">Add New Book</a>
+ {% endif %}
+
 {% endif %}
 {% endblock %}

@@ -2,12 +2,22 @@ from django.shortcuts import render, redirect
 from app.forms import CustomSignupForm , LoginForm, BookForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from django.http import HttpResponseForbidden
 from .models import Book
 from django.db.models import Sum
+
+User = get_user_model()
 # Create your views here.
 
 # Signup views
 def signup(request):
+    # Allow public signup only if there are no users yet (initial setup).
+    # Otherwise only staff users can create new users.
+    if User.objects.exists():
+        if not request.user.is_authenticated or not request.user.is_staff:
+            return HttpResponseForbidden('Only administrators can create users.')
+
     if request.method == 'POST':
         form = CustomSignupForm(request.POST)
         if form.is_valid():
@@ -79,6 +89,10 @@ def books(request):
 # new book views
 @login_required
 def new_book(request):
+    # Only staff users are allowed to create books
+    if not request.user.is_staff:
+        return HttpResponseForbidden('You do not have permission to create books.')
+
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
@@ -92,8 +106,39 @@ def new_book(request):
 # update book
 @login_required
 def update_book(request, id):
-    pass
+    # Only staff users are allowed to update books
+    if not request.user.is_staff:
+        return HttpResponseForbidden('You do not have permission to update books.')
+
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return redirect('books')
+
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('books')
+    else:
+        form = BookForm(instance=book)
+
+    return render(request, 'app/book-form.html', {'form': form})
 
 @login_required
-def delete_book(request):
-    pass
+def delete_book(request, id):
+    # Only staff users are allowed to delete books
+    if not request.user.is_staff:
+        return HttpResponseForbidden('You do not have permission to delete books.')
+
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return redirect('books')
+
+    if request.method == 'POST':
+        book.delete()
+        return redirect('books')
+
+    # If GET request, render a simple confirmation page or redirect
+    return render(request, 'app/book-form.html', {'form': None})
