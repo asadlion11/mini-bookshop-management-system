@@ -1,7 +1,7 @@
 # Env files
 .env
 .env.* 
-.USERS.md
+USERS.md
 
 # Virtual env
 .venv/
